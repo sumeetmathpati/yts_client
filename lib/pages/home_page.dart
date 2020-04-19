@@ -8,9 +8,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  String homeURL =
-      "https://yts.mx/api/v2/list_movies.json?limit=10?sort_by=year?order_by=asc";
-   //https://yts.mx/api/v2/list_movies.json?query_term=%22avengers%22
+  String homeURL = "https://yts.mx/api/v2/list_movies.json?limit=20";
+  //https://yts.mx/api/v2/list_movies.json?query_term=%22avengers%22
 
   var data;
   bool isSearching = false;
@@ -35,17 +34,18 @@ class _HomePageState extends State<HomePage> {
         title: !isSearching
             ? Text("yts client")
             : TextField(
+                autofocus: true,
                 decoration: InputDecoration(
                   hintText: "Search movie names",
-                  icon: Icon(Icons.movie),
                 ),
                 onSubmitted: (text) {
                   setState(() {
-                    fetchData("https://yts.mx/api/v2/list_movies.json?query_term=${text}");
+                    fetchData(
+                        "https://yts.mx/api/v2/list_movies.json?query_term=${text}");
                   });
-
                 },
               ),
+        elevation: 0,
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.search),
@@ -58,24 +58,33 @@ class _HomePageState extends State<HomePage> {
         ],
       ),
       body: data != null
-          ? Column(
-              children: <Widget>[
-                Expanded(
-                  child: ListView.builder(
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        title:
-                            Text(data["data"]["movies"][index]["title_long"]),
-                        subtitle: Text(
-                            "Year: ${data["data"]["movies"][index]["year"]}"),
-                        leading: Image.network(data["data"]["movies"][index]
-                            ["medium_cover_image"]),
-                      );
-                    },
-                    itemCount: data["data"]["movie_count"],
-                  ),
-                )
-              ],
+          ? Container(
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+              ),
+              child: data["data"]["movie_count"] > 0
+                  ? ListView.builder(
+                      itemBuilder: (context, index) {
+                        return Card(
+                          elevation: 0,
+                          child: ListTile(
+                            title: Text(
+                                data["data"]["movies"][index]["title_long"]),
+                            subtitle: Text(
+                                "Year: ${data["data"]["movies"][index]["year"]}"),
+                            leading: Image.network(data["data"]["movies"][index]
+                                ["medium_cover_image"]),
+                          ),
+                        );
+                      },
+                      itemCount:
+                          data["data"]["movie_count"] < data["data"]["limit"]
+                              ? data["data"]["movie_count"]
+                              : data["data"]["limit"],
+                    )
+                  : Center(
+                      child: Text("No result found"),
+                    ),
             )
           : Center(
               child: CircularProgressIndicator(),
