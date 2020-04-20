@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:ytsclient/pages/movie_details.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -32,8 +33,13 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: !isSearching
-            ? Text("yts client")
+            ? Text(
+                "yts client",
+                style:
+                    TextStyle(color: Colors.blue, fontWeight: FontWeight.bold),
+              )
             : TextField(
+                style: TextStyle(color: Colors.blueAccent),
                 autofocus: true,
                 decoration: InputDecoration(
                   hintText: "Search movie names",
@@ -48,7 +54,10 @@ class _HomePageState extends State<HomePage> {
         elevation: 0,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.search),
+            icon: Icon(
+              Icons.search,
+              color: Colors.blueAccent,
+            ),
             onPressed: () {
               setState(() {
                 this.isSearching = !isSearching;
@@ -60,20 +69,39 @@ class _HomePageState extends State<HomePage> {
       body: data != null
           ? Container(
               decoration: BoxDecoration(
-                color: Colors.grey[200],
+                color: Colors.white,
               ),
               child: data["data"]["movie_count"] > 0
                   ? ListView.builder(
                       itemBuilder: (context, index) {
-                        return Card(
-                          elevation: 0,
+                        return Container(
+                          margin: EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                              border:
+                                  Border.all(width: 1, color: Colors.grey[300]),
+                              borderRadius:
+                                  BorderRadius.all(Radius.circular(8.0))),
                           child: ListTile(
+                            onTap: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => MovieDetails(
+                                        data["data"]["movies"][index]["id"]),
+                                  ));
+                            },
                             title: Text(
                                 data["data"]["movies"][index]["title_long"]),
                             subtitle: Text(
-                                "Year: ${data["data"]["movies"][index]["year"]}"),
-                            leading: Image.network(data["data"]["movies"][index]
-                                ["medium_cover_image"]),
+                              "Year: ${data["data"]["movies"][index]["year"]}",
+                            ),
+//                          leading: Image.network(data["data"]["movies"][index]
+//                              ["medium_cover_image"]),
+                            leading: Container(
+                              child: Image.network(data["data"]["movies"][index]
+                                  ["medium_cover_image"]),
+                              decoration: BoxDecoration(border: Border()),
+                            ),
                           ),
                         );
                       },
@@ -87,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                     ),
             )
           : Center(
-              child: CircularProgressIndicator(),
+              child: Container(child: CircularProgressIndicator(backgroundColor: Colors.white)),
             ),
     );
   }
