@@ -10,4 +10,4 @@
 
 [![Build Status](http://img.shields.io/travis/badges/badgerbadgerbadger.svg?style=flat-square)](https://travis-ci.org/badges/badgerbadgerbadger)
 
-<img src = "https://raw.githubusercontent.com/sumeetmathpati/yts_client/master/screenshots/1.jpg" width ="200" /><img src = "https://raw.githubusercontent.com/sumeetmathpati/yts_client/master/screenshots/1\2.jpg" width ="200" /><img src = "https://raw.githubusercontent.com/sumeetmathpati/yts_client/master/screenshots/3.jpg" width ="200" />
+<img src = "https://raw.githubusercontent.com/sumeetmathpati/yts_client/master/screenshots/1.jpg" width ="200" /><img src = "https://raw.githubusercontent.com/sumeetmathpati/yts_client/master/screenshots/1\2.jpg" width ="200" /><img src = "https://raw.githubusercontent.com/sumeetmathpati/yts_client/master/screenshots/1\3.jpg" width ="200" />
