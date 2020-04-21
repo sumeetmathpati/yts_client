@@ -238,7 +238,6 @@ class _MovieDetailsState extends State<MovieDetails> {
           : Center(
               child: Container(
                 child: CircularProgressIndicator(
-                  backgroundColor: Colors.white,
                 ),
                 color: Colors.white,
               ),
