@@ -1,16 +1,11 @@
-# ytsclient
+<a href="https://github.com/sumeetmathpati/yts_client"><img src="https://raw.githubusercontent.com/sumeetmathpati/yts_client/master/assets/icon/icon.png" title="YTSclient" alt="YTSclient"></a>
 
-A yts client application.
+# YTS client
 
-## Getting Started
+> A cross platform yifi torrent client app.
 
-This project is a starting point for a Flutter application.
+> Made in Fluttr
 
-A few resources to get you started if this is your first Flutter project:
+> yts-torrent yts yts-movies movie-app
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+[![Build Status](http://img.shields.io/travis/badges/badgerbadgerbadger.svg?style=flat-square)](https://travis-ci.org/badges/badgerbadgerbadger)
