@@ -8,5 +8,4 @@
 
 > yts-torrent yts yts-movies movie-app
 
-[![Build Status](https://travis-ci.org/doge/wow.svg)](https://travis-ci.org/doge/wow)
-
+[![Build Status](http://img.shields.io/travis/badges/badgerbadgerbadger.svg?style=flat-square)](https://travis-ci.org/badges/badgerbadgerbadger)
