@@ -72,35 +72,36 @@ class _HomePageState extends State<HomePage> {
                 color: Colors.white,
               ),
               child: data["data"]["movie_count"] > 0
-                  ? ListView.builder(
+                  ? GridView.builder(
+                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        childAspectRatio: 0.6667,
+                      ),
                       itemBuilder: (context, index) {
                         return Container(
-                          margin: EdgeInsets.all(8),
+                        
+                          // margin: EdgeInsets.all(8),
+                          padding: EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                              border:
-                                  Border.all(width: 1, color: Colors.grey[300]),
                               borderRadius:
                                   BorderRadius.all(Radius.circular(8.0))),
-                          child: ListTile(
+                          child: InkWell(
+                          
                             onTap: () {
                               Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => MovieDetails(
-                                        data["data"]["movies"][index]["id"]),
-                                  ));
+                                      builder: (context) => MovieDetails(
+                                          data["data"]["movies"][index]
+                                              ["id"])));
                             },
-                            title: Text(
-                                data["data"]["movies"][index]["title_long"]),
-                            subtitle: Text(
-                              "Year: ${data["data"]["movies"][index]["year"]}",
-                            ),
-//                          leading: Image.network(data["data"]["movies"][index]
-//                              ["medium_cover_image"]),
-                            leading: Container(
-                              child: Image.network(data["data"]["movies"][index]
-                                  ["medium_cover_image"]),
-                              decoration: BoxDecoration(border: Border()),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                data["data"]["movies"][index]
+                                    ["large_cover_image"],
+                                fit: BoxFit.cover,
+                              ),
                             ),
                           ),
                         );
