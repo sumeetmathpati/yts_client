@@ -26,6 +26,8 @@ dependencies:
   http: ^0.12.0+4
   url_launcher: ^5.4.2
   flutter_launcher_icons: ^0.7.4
+  toast: ^0.1.5
+  flutter_torrent_streamer: ^0.0.2
 
 dev_dependencies:
   flutter_test:
@@ -36,6 +38,7 @@ flutter_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/icon/icon.png"
+
 
 
 # For information on the generic Dart part of this file, see the

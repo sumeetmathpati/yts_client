@@ -1,8 +1,10 @@
+import 'package:flutter/services.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:toast/toast.dart';
 
 class MovieDetails extends StatefulWidget {
   MovieDetails(this.movieID);
@@ -15,6 +17,9 @@ class MovieDetails extends StatefulWidget {
 
 class _MovieDetailsState extends State<MovieDetails> {
   _MovieDetailsState(this.movieID);
+
+  bool isStreamReady = false;
+  int progress = 0;
 
   String detailsURL = "https://yts.mx/api/v2/movie_details.json?movie_id=";
   var data;
@@ -31,6 +36,7 @@ class _MovieDetailsState extends State<MovieDetails> {
     genres = data["data"]["movie"]["genres"];
     torrents = data["data"]["movie"]["torrents"];
     title = data["data"]["movie"]["title"];
+
     setState(() {
       _buildGenreRowList();
       _buildTorrentRowList();
@@ -67,7 +73,14 @@ class _MovieDetailsState extends State<MovieDetails> {
           padding: EdgeInsets.all(8),
           child: OutlineButton(
             onPressed: () {
+
               _launchURL(torrent["url"]);
+
+            },
+            onLongPress: () {
+              _launchURL(torrent["magnet:?xt=urn:btih:${torrent["hash"]}&dn=${title.replaceAll(" ", "+")}&tr=http://track.one:1234/announce&tr=udp://track.two:80"]);
+              Clipboard.setData(ClipboardData(text: "magnet:?xt=urn:btih:${torrent["hash"]}&dn=${title.replaceAll(" ", "+")}&tr=http://track.one:1234/announce&tr=udp://track.two:80"));
+              Toast.show("Magnet link copied to clipboard!", context, duration: Toast.LENGTH_SHORT, gravity:Toast.BOTTOM);
             },
             padding: EdgeInsets.all(8),
             borderSide: BorderSide(color: Colors.blue, width: 2),
@@ -126,111 +139,106 @@ class _MovieDetailsState extends State<MovieDetails> {
       body: data != null
           ? SafeArea(
               child: SingleChildScrollView(
-                child: Container(
-                  padding: EdgeInsets.all(16.0),
-                  color: Colors.white,
-                  height: MediaQuery.of(context).size.height,
-                  child: Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: <Widget>[
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(10.0),
-                          child: Image.network(
-                            data["data"]["movie"]["medium_cover_image"],
+                child: Center(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: Image.network(
+                          data["data"]["movie"]["medium_cover_image"],
+                        ),
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Text(
+                        data["data"]["movie"]["title"].toString(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 24,
+                          color: Colors.blueAccent,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Text(
+                        data["data"]["movie"]["year"].toString(),
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 18,
+                          color: Colors.blueAccent,
+                        ),
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Icon(
+                            Icons.star,
+                            color: Colors.yellow,
                           ),
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        Text(
-                          data["data"]["movie"]["title"].toString(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 24,
-                            color: Colors.blueAccent,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        Text(
-                          data["data"]["movie"]["year"].toString(),
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                            color: Colors.blueAccent,
-                          ),
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Icon(
-                              Icons.star,
-                              color: Colors.yellow,
-                            ),
-                            Text(
-                              "imdb",
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 10,
-                                color: Colors.blueAccent,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 8,
-                            ),
-                            Text(
-                              data["data"]["movie"]["rating"].toString(),
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18,
-                                color: Colors.blueAccent,
-                              ),
-                            ),
-                          ],
-                        ),
-                        SizedBox(
-                          height: 16,
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: _buildGenreRowList(),
-                          ),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Text(
-                            data["data"]["movie"]["description_intro"]
-                                .toString(),
-                            maxLines: 5,
-                            overflow: TextOverflow.ellipsis,
+                          Text(
+                            "imdb",
                             style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black,
-                                fontStyle: FontStyle.italic),
+                              fontWeight: FontWeight.bold,
+                              fontSize: 10,
+                              color: Colors.blueAccent,
+                            ),
                           ),
-                        ),
-                        SizedBox(
-                          height: 8,
-                        ),
-                        SingleChildScrollView(
-                          scrollDirection: Axis.horizontal,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: _buildTorrentRowList(),
+                          SizedBox(
+                            width: 8,
                           ),
-                        )
-                      ],
-                    ),
+                          Text(
+                            data["data"]["movie"]["rating"].toString(),
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                              color: Colors.blueAccent,
+                            ),
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: 16,
+                      ),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: _buildGenreRowList(),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Text(
+                          data["data"]["movie"]["description_intro"]
+                              .toString(),
+                          maxLines: 5,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Colors.black,
+                              fontStyle: FontStyle.italic),
+                        ),
+                      ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      SingleChildScrollView(
+                        scrollDirection: Axis.horizontal,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: _buildTorrentRowList(),
+                        ),
+                      )
+                    ],
                   ),
                 ),
               ),
